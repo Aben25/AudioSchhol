@@ -1,14 +1,28 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity } from 'react-native';
-import { signIn } from '../../firebaseConfig';
+import { View, TextInput, Text, TouchableOpacity, Alert, Button } from 'react-native';
+import WithGoogle from '../Components/WithGoogle';
+import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../../hooks/AuthProvider';
 
 const LoginPage = () => {
+    const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { login } = useAuth();
 
-    const handleSignIn = () => {
-        signIn(email, password);
+    const handleLogin = () => {
+        login(email, password).then (() => {
+            navigation.navigate('Home');
+            console.log('Login successful');
+        }).
+        catch((error) => {
+            console.log(error.message);
+        });
     };
+
+    const handleCreateAccountPress = () => {
+        navigation.navigate('Signup');
+    }
 
     return (
         <View style="flex: 1; justify-content: center; items-center; bg-gray-200">
@@ -30,13 +44,17 @@ const LoginPage = () => {
                     onChangeText={setPassword}
                     secureTextEntry
                 />
-                <TouchableOpacity
-                    style="bg-blue-500 text-white rounded-lg px-4 py-2"
-                    onPress={handleSignIn}
-                >
-                    <Text style="text-center">Sign In</Text>
-                </TouchableOpacity>
+                <Button title="Login" onPress={handleLogin} />
+
             </View>
+            <TouchableOpacity
+                className="bg-blue-500 rounded-lg py-2 px-4"
+                onPress={handleLogin}
+            >
+
+                <Text className="text-white font-bold">Create a new account</Text>
+            </TouchableOpacity>
+            <WithGoogle/>
         </View>
     );
 };

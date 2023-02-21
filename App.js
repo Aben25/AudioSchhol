@@ -1,32 +1,37 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
-import Login from './Pages/Auth/Login';
-import SignInWithGoogle from './Pages/Components/signInWithGoogle';
-import SignupPage from './Pages/Auth/SignupPage';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import HomeScreen from './Pages/HomeScreen';
+import SignupPage from './Pages/Auth/SignupPage';
+import LoginPage from './Pages/Auth/Login';
+import { AuthProvider } from './hooks/AuthProvider';
 
-const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
-const App = () => {
+const HomeStack = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="SignUp" component={SignupPage} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Signup" component={SignupPage} />
+      <Tab.Screen name="Login" component={LoginPage} />
+    </Tab.Navigator>
   );
 };
 
-const HomeScreen = ({ navigation }) => {
+const App = () => {
   return (
-    <View className="flex flex-col justify-center items-center h-full">
-      <Text className="text-4xl font-bold mb-4">Welcome to my app!</Text>
-      <Login />
-      <SignInWithGoogle />
-      <Button title="Create a New Account" onPress={() => navigation.navigate('SignUp')} />
-    </View>
+
+    <NavigationContainer>
+      <AuthProvider>
+
+        <Drawer.Navigator initialRouteName="Home">
+          <Drawer.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
+        </Drawer.Navigator>
+      </AuthProvider>
+
+    </NavigationContainer>
   );
 };
 

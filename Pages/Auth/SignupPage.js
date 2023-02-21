@@ -1,8 +1,21 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, Button, Text, TouchableOpacity } from 'react-native';
 import { auth, signInWithGoogle, createNew } from '../../firebaseConfig';
+import { useNavigation } from '@react-navigation/native';
 
 const SignupPage = () => {
+
+    const navigation = useNavigation();
+    useEffect(() => {
+        navigation.setOptions({
+            headerLeft: () => (
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Text>Back</Text>
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -17,6 +30,8 @@ const SignupPage = () => {
 
     return (
         <View>
+            <Text>Sign Up Page</Text>
+         
             <TextInput
                 placeholder="Email"
                 value={email}

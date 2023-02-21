@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "audioschool",
-    "slug": "audioschool",
+    "slug": "audio",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +28,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "764eb8b2-27bd-4b6c-bfcd-cd8e82244846"
+      }
+    },
+    "owner": "ben25"
   }
 }

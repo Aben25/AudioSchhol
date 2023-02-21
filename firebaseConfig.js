@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+
 
 
 const firebaseConfig = {
@@ -35,40 +36,36 @@ const createNew = (auth, email, password) => {
         });
 };
 
-const signIn = (auth, email, password) => {
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in
-            const user = userCredential.user;
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-        });
-};
+
+async function loginwemp(email, password) {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    console.log("Logged in");
+    
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    
+  }
+  
+}
+
+async function loginWithGoogle() {
+    try {
+        const provider = new GoogleAuthProvider();
+        const auth = getAuth();
+
+        const { user } = await signInWithPopup(auth, provider);
+
+        return { uid: user.uid, displayName: user.displayName, photoURL: user.photoURL };
+    } catch (error) {
+        if (error.code !== "auth/cancelled-popup-request") {
+            console.error(error);
+        }
+
+        return null;
+    }
+}
 
 
-const signInWithGoogle = () =>
-signInWithPopup(auth, provider)
-    .then((result) => {
-        console.log(result);
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-    }).catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-    });
-
-export { auth, signInWithGoogle, createNew, signIn };
+export { auth, loginWithGoogle, createNew, loginwemp, onAuthStateChanged, provider };
